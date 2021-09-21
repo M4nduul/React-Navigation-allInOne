@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { SharedElement } from 'react-navigation-shared-element';
+import { createSharedElementStackNavigator, SharedElement } from 'react-navigation-shared-element';
 import { Text, View, FlatList, Image, Pressable } from 'react-native';
 
 type Data = {
@@ -66,7 +66,8 @@ const data = [
   },
 ]
 
-const Stack = createStackNavigator()
+const Stack = createSharedElementStackNavigator()
+// const Stack = createStackNavigator()
 
 const ListScreen = ({ navigation }: Props) => {
 
@@ -99,10 +100,20 @@ const DetailScreen = ({route: {params: imgUrl}}: Props) => (
 )
 
 
-const SelectElement = () => (
+const SelectElemented = () => (
   <Stack.Navigator>
     <Stack.Screen name='List' component={ListScreen} />
-    <Stack.Screen name='Detail' component={DetailScreen} />
+    <Stack.Screen name='Detail' component={DetailScreen} sharedElements={(route, showing, otherRoute)=> {
+      const { imgUrl } = route.params
+      return [{
+        id: imgUrl,
+        animation: 'fade-in',
+        resize: 'clip',
+        align: 'center-bottom'
+      
+      }]
+     }}/>
+     
   </Stack.Navigator>
 );
-export default SelectElement
+export default SelectElemented
