@@ -1,14 +1,15 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { Text } from 'react-native';
 import SelectElement from './SelectElement'
+import LottieView from 'lottie-react-native'
 
 const App = () => {
   
   return (
-   <NavigationContainer>
-     <SelectElement />
-   </NavigationContainer>
+      <NavigationContainer>
+        <SelectElement />
+      </NavigationContainer>
+      // <LottieView source={require('./animation/69998-melting-lolly.json')} autoPlay loop={false} />
   );
 };
 
