@@ -1,14 +1,14 @@
-import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import { Text } from 'react-native';
-import SelectElement from './SelectElement'
+import { NavigationContainer } from '@react-navigation/native';
+import Location from './GetLocation';
+import GetCamera from './GetCamera';
 
-const App = () => {
-  
+const App = () => {  
   return (
-   <NavigationContainer>
-     <SelectElement />
-   </NavigationContainer>
+    <NavigationContainer>
+      {/* <GetCamera /> */}
+      <Location />
+    </NavigationContainer>
   );
 };
 

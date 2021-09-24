@@ -1,7 +1,9 @@
-import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { createSharedElementStackNavigator, SharedElement } from 'react-navigation-shared-element';
+import { createSharedElementStackNavigator, SharedElement, SharedElementsConfig } from 'react-navigation-shared-element';
 import { Text, View, FlatList, Image, Pressable } from 'react-native';
+import LottieView from 'lottie-react-native'
+import { StackScreenProps } from '@react-navigation/stack';
+import { ParamListBase } from '@react-navigation/routers';
 
 type Data = {
   id: number,
@@ -14,7 +16,8 @@ type Props = {
     params: string
   }
   navigation: {
-    navigate: any
+    navigate: any,
+    replace: any
   },
 }
 
@@ -67,9 +70,20 @@ const data = [
 ]
 
 const Stack = createSharedElementStackNavigator()
-// const Stack = createStackNavigator()
 
-const ListScreen = ({ navigation }: Props) => {
+const Splash = ({ navigation }: StackScreenProps<ParamListBase>) => {
+  return (
+    <LottieView source={require('./animation/69998-melting-lolly.json')} autoPlay loop={false} 
+      speed={2}
+      onAnimationFinish={() => {
+        navigation.replace('List')
+      }}
+    />
+
+  )
+}
+
+const ListScreen = ({ navigation }: StackScreenProps<ParamListBase>) => {
 
   const renderData = ({ item: { title, imgUrl }, index }: RenderDataProps) => {
       return (
@@ -82,38 +96,40 @@ const ListScreen = ({ navigation }: Props) => {
       )
   }
   
+  
+  
   return (
-    <View style={{flexDirection: 'row', }}>
       <FlatList 
+          numColumns={ 2 }
           data={data}
-          renderItem={renderData}
-          keyExtractor={item=>  item.id}
+          renderItem={ renderData }
+          keyExtractor={({id})=> id}
       />
-    </View>
   )
 }
 
-const DetailScreen = ({route: {params: imgUrl}}: Props) => (
+const DetailScreen = ({route: {params: imgUrl}}: StackScreenProps<ParamListBase>) => (
   <SharedElement id = { imgUrl }>
-    <Image source={{ uri: imgUrl }}  style={{width: 400, height: 500}} />
+    <Image source={{ uri: imgUrl }}  style={{width: '100%', height: '100%'}} />
   </SharedElement>
 )
 
 
-const SelectElemented = () => (
+const SelectElement = (): JSX.Element => (
   <Stack.Navigator>
+    <Stack.Screen name='Splash' component={Splash} 
+      options={{headerShown: false}}/>
     <Stack.Screen name='List' component={ListScreen} />
-    <Stack.Screen name='Detail' component={DetailScreen} sharedElements={(route, showing, otherRoute)=> {
-      const { imgUrl } = route.params
-      return [{
-        id: imgUrl,
-        animation: 'fade-in',
-        resize: 'clip',
-        align: 'center-bottom'
-      
-      }]
-     }}/>
+    <Stack.Screen name='Detail' component={DetailScreen} 
+      options={{headerShown: false}}
+      sharedElements={(route): SharedElementsConfig=> {
+        const imgUrl = route.params
+        return [{
+          id: imgUrl,
+          animation: 'fade',
+        }]
+      }}/>
      
   </Stack.Navigator>
 );
-export default SelectElemented
+export default SelectElement
